@@ -11,11 +11,21 @@ use Illuminate\Http\Response;
 class TodoController extends Controller
 {
    public function index(){
-       $todo= Todo::all();
+       $todo= Todo::paginate(8);
        return response()->json($todo,Response::HTTP_OK);
    }
 
    public function store(Request $request){
+
+//       $todo= new Todo();
+//       $todo->title = $request->input('title');
+//       $todo->description = $request->input('description');
+
+//       $todo= new Todo();
+//       $todo->title = $request->title;
+//       $todo->description = $request->description;
+//       $todo->save();
+
        $todo = Todo::create([
            'title'=>$request->title,
            'description' => $request->description
