@@ -19,7 +19,8 @@ class TodoResource extends JsonResource
         return [
             'id'=>$this->id,
             'title'=>$this->title,
-            'description'=>$this->description
+            'description'=>$this->description,
+            'file_url'=>$this->file_url == null ? "" : $this->file_url
         ];
     }
 

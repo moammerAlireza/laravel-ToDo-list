@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class storeTodoRequest extends FormRequest
+class UploadTodoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class storeTodoRequest extends FormRequest
     public function rules()
     {
         return [
-           'title'=>'string|min:8|max:255',
-            'description'=>'string|nullable',
-            'file_url'=> 'nullable|url'
+            'todo_file'=>'file|required|mimes:jpg,png,pdf|max:2048'
         ];
     }
 }
