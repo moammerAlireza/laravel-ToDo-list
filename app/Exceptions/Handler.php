@@ -8,6 +8,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
@@ -56,6 +57,11 @@ class Handler extends ExceptionHandler
         //401 unauthorized
         if($e instanceof AuthenticationException && $request->expectsJson()){
             return $this->errorResponse([],'Authentication failure', Response::HTTP_UNAUTHORIZED);
+        }
+
+        //403 Forbidden
+        if($e instanceof AccessDeniedHttpException && $request->expectsJson()){
+            return $this->errorResponse([],'This action is Unauthorised',Response::HTTP_FORBIDDEN);
         }
 
         //404 Not found

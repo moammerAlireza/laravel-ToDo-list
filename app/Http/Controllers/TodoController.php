@@ -9,7 +9,8 @@ use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Traits\customApiResponser;
-
+use App\Http\Requests\storeTodoRequest;
+use App\Http\Requests\updateTodoRequest;
 
 class TodoController extends Controller
 {
@@ -21,7 +22,7 @@ class TodoController extends Controller
         return new TodoCollection($todo, 'Todos received successfully');
     }
 
-    public function store(Request $request)
+    public function store(StoreTodoRequest $request)
     {
 
         $todo = Todo::create([
@@ -34,7 +35,7 @@ class TodoController extends Controller
         return new TodoResource($todo, 'Todo created successfully');
     }
 
-    public function update($id, Request $request)
+    public function update($id, updateTodoRequest $request)
     {
         $todo = Todo::findOrFail($id);
         $todo->update([
