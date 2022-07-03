@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 use App\Traits\customApiResponser;
 use App\Http\Requests\storeTodoRequest;
 use App\Http\Requests\updateTodoRequest;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class TodoController extends Controller
@@ -35,6 +36,9 @@ class TodoController extends Controller
         if (!$todo) {
             return $this->errorResponse([],'Failed to create ToDo');
         }
+        Mail::send('mails.todo-created',['todoTitle'=>$todo->title], function ($message){
+            $message->to('moameralireza@gmail.com')->subject('New Todo');
+        });
         return new TodoResource($todo, 'Todo created successfully');
     }
 
