@@ -38,9 +38,8 @@ class TodoController extends Controller
         return new TodoResource($todo, 'Todo created successfully');
     }
 
-    public function update($id, updateTodoRequest $request)
+    public function update(Todo $todo, updateTodoRequest $request)
     {
-        $todo = Todo::findOrFail($id);
         $todo->update([
             'title' => $request->title,
             'description' => $request->description
@@ -51,9 +50,8 @@ class TodoController extends Controller
         return new TodoResource($todo, "Todo Updated successfully.");
     }
 
-    public function destroy($id)
+    public function destroy(Todo $todo)
     {
-        $todo = Todo::findOrFail($id);
         $result = $todo->delete();
         if (!$result) {
             return $this->errorResponse([],'Failed to delete ToDo');
@@ -61,9 +59,8 @@ class TodoController extends Controller
         return $this->successResponse([],'ToDo deleted successfully');
     }
 
-    public function show($id)
+    public function show(Todo $todo)
     {
-        $todo = Todo::findOrFail($id);
         return new TodoResource($todo, "todo received successfully");
     }
 
