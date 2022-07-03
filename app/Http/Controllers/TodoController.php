@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UploadTodoRequest;
 use App\Http\Resources\TodoCollection;
 use App\Http\Resources\TodoResource;
+use App\Jobs\SendTodoCreatedMail;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -36,9 +37,7 @@ class TodoController extends Controller
         if (!$todo) {
             return $this->errorResponse([],'Failed to create ToDo');
         }
-        Mail::send('mails.todo-created',['todoTitle'=>$todo->title], function ($message){
-            $message->to('moameralireza@gmail.com')->subject('New Todo');
-        });
+        dispatch(new SendTodoCreatedMail($todo->title));
         return new TodoResource($todo, 'Todo created successfully');
     }
 
