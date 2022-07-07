@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use App\Traits\customApiResponser;
 use App\Http\Requests\storeTodoRequest;
 use App\Http\Requests\updateTodoRequest;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,8 +23,14 @@ class TodoController extends Controller
 
     public function index()
     {
+        //        App::setLocale('fa');
+        //        $locale=App::currentLocale();
+        //        if (App::isLocale('fa')){
+        //
+        //            dd($locale);
+        //        }
         $todo = Todo::paginate(8);
-        return new TodoCollection($todo, 'Todos received successfully');
+        return new TodoCollection($todo, __('messages.todo.index.success'));
     }
 
     public function store(StoreTodoRequest $request)
@@ -35,10 +42,10 @@ class TodoController extends Controller
             'file_url'=> $request->file_url
         ]);
         if (!$todo) {
-            return $this->errorResponse([],'Failed to create ToDo');
+            return $this->errorResponse([],__('messages.todo.store.failed'));
         }
         dispatch(new SendTodoCreatedMail($todo->title));
-        return new TodoResource($todo, 'Todo created successfully');
+        return new TodoResource($todo,__('messages.todo.store.success'));
     }
 
     public function update(Todo $todo, updateTodoRequest $request)
@@ -48,23 +55,23 @@ class TodoController extends Controller
             'description' => $request->description
         ]);
         if (!$todo) {
-           return $this->errorResponse([],'Failed to update ToDo');
+           return $this->errorResponse([],__('messages.todo.update.failed'));
         }
-        return new TodoResource($todo, "Todo Updated successfully.");
+        return new TodoResource($todo, __('messages.todo.update.success'));
     }
 
     public function destroy(Todo $todo)
     {
         $result = $todo->delete();
         if (!$result) {
-            return $this->errorResponse([],'Failed to delete ToDo');
+            return $this->errorResponse([],__('messages.todo.destroy.failed'));
         }
-        return $this->successResponse([],'ToDo deleted successfully');
+        return $this->successResponse([],__('messages.todo.destroy.success'));
     }
 
     public function show(Todo $todo)
     {
-        return new TodoResource($todo, "todo received successfully");
+        return new TodoResource($todo, __('messages.todo.show.success'));
     }
 
     public function upload(UploadTodoRequest $request)
@@ -72,10 +79,10 @@ class TodoController extends Controller
         $file= $request->file('todo_file');
         $result= $file->store('public/pictures');
         if(!$result){
-            return $this->errorResponse([],'Uploading file failed');
+            return $this->errorResponse([],__('messages.todo.upload.failed'));
         }
         return $this->successResponse([
             'todo_file'=>env('APP_URL'). ":" . env('App_PORT'). Storage::url($result)
-        ],'File Upload Successfully');
+        ],__('messages.todo.upload.success'));
     }
 }
