@@ -23,12 +23,6 @@ class TodoController extends Controller
 
     public function index()
     {
-        //        App::setLocale('fa');
-        //        $locale=App::currentLocale();
-        //        if (App::isLocale('fa')){
-        //
-        //            dd($locale);
-        //        }
         $todo = Todo::paginate(8);
         return new TodoCollection($todo, __('messages.todo.index.success'));
     }
