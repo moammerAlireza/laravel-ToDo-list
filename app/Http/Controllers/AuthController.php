@@ -29,13 +29,14 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $token=Auth::attempt([
+        $result=Auth::attempt([
             "email"=>$request->email,
             "password"=>$request->password,
         ]);
-        if(!$token){
+        if(!$result){
             return $this->errorResponse([],'wrong email or password');
         }
+        $token=Auth::user()->createToken('mobile_app')->plainTextToken;
         return new LoginResource(Auth::user(),'Login was successfully',$token);
     }
 }
