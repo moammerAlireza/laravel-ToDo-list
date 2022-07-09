@@ -39,4 +39,13 @@ class AuthController extends Controller
         $token=Auth::user()->createToken('mobile_app')->plainTextToken;
         return new LoginResource(Auth::user(),'Login was successfully',$token);
     }
+
+    public function logout()
+    {
+        $result=Auth::user()->tokens()->delete();
+        if(!$result){
+            return $this->errorResponse([],'Could not logout, please try again later');
+        }
+        return $this->successResponse([],'Logout was successful');
+    }
 }
