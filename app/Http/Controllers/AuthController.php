@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Mail\AuthRegisterMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\CustomApiResponser;
 use App\Http\Resources\LoginResource;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -19,11 +21,20 @@ class AuthController extends Controller
     {
         $user=User::create([
             'email'=>$request->email,
-            'password'=>Hash::make($request->password)
+            'password'=>Hash::make($request->password),
+            'first_name'=>$request->first_name,
+//            'last_name',
+//            'bio'
+
+
         ]);
         if (!$user){
             return $this->errorResponse([],'could not register,try again later');
         }
+
+        Mail::send('mails.auth-register',['first_name'=>$user->first_name], function ($message) use ($user){
+            $message->to($user->email)->subject('welcome');
+        });
         return $this-> successResponse([],'Register successful,try to login', Response::HTTP_CREATED);
     }
 

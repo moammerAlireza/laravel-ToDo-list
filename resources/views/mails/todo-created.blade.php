@@ -1,1 +1,1 @@
-<h1> Todo : {{$todoTitle}}  created successfully</h1>
+<h1>Todo: {{$todoTitle}} created successfully</h1>
