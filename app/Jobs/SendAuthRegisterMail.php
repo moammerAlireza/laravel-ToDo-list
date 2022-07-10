@@ -10,19 +10,23 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendTodoCreatedMail implements ShouldQueue
+class SendAuthRegisterMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    private $title;
+
+    private $first_name;
+    private $email;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($title)
+    public function __construct($first_name, $email)
     {
-        $this->title=$title;
+        $this->first_name = $first_name;
+        $this->email = $email;
+
     }
 
     /**
@@ -32,8 +36,8 @@ class SendTodoCreatedMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::send('mails.todo-created  ',['todoTitle'=>$this->title], function ($message){
-            $message->to('moameralireza@gmail.com')->subject('New Todo');
+        Mail::send('mails.auth-register', ["first_name" => $this->first_name], function ($message) {
+            $message->to($this->email)->subject('welcome');
         });
     }
 }

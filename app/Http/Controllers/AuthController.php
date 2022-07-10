@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Mail\AuthRegisterMail;
+use App\Jobs\SendAuthRegisterMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,10 +31,7 @@ class AuthController extends Controller
         if (!$user){
             return $this->errorResponse([],'could not register,try again later');
         }
-
-        Mail::send('mails.auth-register',['first_name'=>$user->first_name], function ($message) use ($user){
-            $message->to($user->email)->subject('welcome');
-        });
+        dispatch(new SendAuthRegisterMail($user->first_name,$user->email));
         return $this-> successResponse([],'Register successful,try to login', Response::HTTP_CREATED);
     }
 
