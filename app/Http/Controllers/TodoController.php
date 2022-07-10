@@ -23,7 +23,7 @@ class TodoController extends Controller
 
     public function index()
     {
-        $todo = Todo::paginate(8);
+        $todo = Todo::withTrashed()->paginate(8);
         return new TodoCollection($todo, __('messages.todo.index.success'));
     }
 
@@ -53,7 +53,6 @@ class TodoController extends Controller
         }
         return new TodoResource($todo, __('messages.todo.update.success'));
     }
-
     public function destroy(Todo $todo)
     {
         $result = $todo->delete();

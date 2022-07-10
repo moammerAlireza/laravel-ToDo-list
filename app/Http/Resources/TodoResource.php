@@ -20,7 +20,8 @@ class TodoResource extends JsonResource
             'id'=>$this->id,
             'title'=>$this->title,
             'description'=>$this->description,
-            'file_url'=>$this->file_url == null ? "" : $this->file_url
+            'file_url'=>$this->file_url == null ? "" : $this->file_url,
+            'deleted_at'=>$this->deleted_at == null ? "" : $this->deleted_at->diffForHumans()
         ];
     }
 
